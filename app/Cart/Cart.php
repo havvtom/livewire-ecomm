@@ -46,6 +46,18 @@ class Cart implements CartInterface
 		]);
 	}
 
+	public function remove( Variation $variation )
+	{
+		$this->instance()->variations()->detach($variation); 
+	}
+
+	public function changeQuantity( Variation $variation, $quantity )
+	{
+		$this->instance()->variations()->updateExistingPivot($variation->id, [
+			'quantity' => min($quantity, $variation->stockCount())
+		]);
+	}
+
 	public function getVariation( Variation  $variation )
 	{
 		return $this->instance()->variations->find( $variation->id );
@@ -61,11 +73,38 @@ class Cart implements CartInterface
 		return $this->contents()->count();
 	}
 
+	public function isEmpty()
+	{
+		return $this->contents()->count() == 0;
+	}
+
+	public function subtotal()
+	{
+		return $this->instance()->variations
+					->reduce(function($carry, $variation){
+						return $carry + ($variation->price * $variation->pivot->quantity);
+					});
+	}
+
+	public function formattedSubtotal()
+	{
+		return money($this->subtotal());
+	}
+
 	protected function instance()
 	{
 		if( $this->instance ){
 			return $this->instance;
 		}
-		return $this->instance = ModelsCart::whereUuid( $this->session->get(config('cart.session.key')) )->first();
+		return $this->instance = ModelsCart::query()
+										->with(
+											'variations.product', 
+											'variations.ancestorsAndSelf', 
+											'variations.media',
+											'variations.descendantsAndSelf.stocks'
+										)
+										->whereUuid( $this->session
+										->get(config('cart.session.key')) )
+										->first();
 	}
 }
