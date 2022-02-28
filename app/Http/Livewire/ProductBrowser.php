@@ -24,6 +24,16 @@ class ProductBrowser extends Component
     {   
         //Search
 
+        $filters = collect($this->queryFilters)->filter( fn($filter) => !empty($filter) )
+                        ->recursive()
+                        ->map(function ($value, $key){
+                                return $value->map(fn ($value) => $key . ' = "' . $value . '"' );
+                            })
+                        ->flatten()
+                        ->join(' AND ');
+
+        // dd($filters);
+
         $search = Product::search('', function ($meilisearch, string $query, array $options) {
             // $options['filter'] = 'category_ids = ' . $this->category->id;
 
