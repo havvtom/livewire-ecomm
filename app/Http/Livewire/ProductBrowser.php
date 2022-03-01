@@ -11,6 +11,10 @@ class ProductBrowser extends Component
 
     public $queryFilters = [];
 
+    public $priceRange = [
+        'max' => null
+    ];
+
     public function mount()
     {
         $this->queryFilters = $this->category->products->pluck('variations')->flatten()
@@ -18,26 +22,38 @@ class ProductBrowser extends Component
         ->keys()
         ->mapWithKeys( fn ($key) => [ $key => [] ] )
         ->toArray();
+
+
     }
 
     public function render()
     {   
         //Search
 
-        $filters = collect($this->queryFilters)->filter( fn($filter) => !empty($filter) )
-                        ->recursive()
-                        ->map(function ($value, $key){
-                                return $value->map(fn ($value) => $key . ' = "' . $value . '"' );
-                            })
-                        ->flatten()
-                        ->join(' AND ');
-
-        // dd($filters);
-
         $search = Product::search('', function ($meilisearch, string $query, array $options) {
-            // $options['filter'] = 'category_ids = ' . $this->category->id;
+           
+            $filters = collect($this->queryFilters)->filter( fn($filter) => !empty($filter) )
+            ->recursive()
+            ->map(function($value, $key){
+                return $value->map(fn ($value) => $key . ' = "' . $value . '"');
+            })
+            ->flatten()
+            ->join(' AND ');
 
             $options['facetsDistribution'] = ['Size', 'Color'];
+
+            $options['filter'] = null;
+
+            if ($filters){
+                $options['filter'] = $filters;
+            }     
+
+            //Filter by price       
+            if ($this->priceRange['max']){
+                $options['filter'] .= (isset($options['filter']) ? ' AND ' : '') . 'price <= '.$this->priceRange['max'];
+            } 
+
+           
 
             return $meilisearch->search($query, $options);
 
@@ -45,9 +61,15 @@ class ProductBrowser extends Component
         
         $products = $this->category->products->find(collect($search['hits'])->pluck('id'));
 
+        //Set max price
+        $maxPrice = $this->category->products->max('price');
+
+        $this->priceRange['max'] = $this->priceRange['max'] ?: $maxPrice;
+
         return view('livewire.product-browser', [
             'products' => $products,
-            'filters' => $search['facetsDistribution']
+            'filters' => $search['facetsDistribution'],
+            'maxPrice' => $maxPrice
         ]);
     }
 }

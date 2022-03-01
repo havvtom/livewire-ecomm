@@ -12,6 +12,7 @@ use Spatie\Image\Manipulations;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Models\Scopes\LiveScope;
 
 class Product extends Model implements HasMedia
 {
@@ -20,6 +21,11 @@ class Product extends Model implements HasMedia
     use InteractsWithMedia;
 
     use Searchable;
+
+    public static function booted()
+    {
+        static::addGlobalScope( new LiveScope );
+    }
 
     public function formattedPrice()
     {
