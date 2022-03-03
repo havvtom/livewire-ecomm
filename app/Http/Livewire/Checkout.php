@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Cart\Contracts\CartInterface;
 use App\Models\ShippingType;
+use App\Models\ShippingAddress;
 use App\Cart\Cart;
 
 class Checkout extends Component
@@ -12,13 +13,80 @@ class Checkout extends Component
 
     public $shippingTypes;
 
+    public $shippingAddress;
+
     public $shippingTypeId;
+
+    public $userShippingAddressId;
+
+    public $accountForm = [
+        'email' => ''
+    ];
+
+    public $shippingForm = [
+        'address' => '',
+        'city' => '',
+        'postcode' => ''
+    ];
+
+    protected $validationAttributes = [
+        'accountForm.email' => 'email address',
+        'shippingForm.address' => 'shipping address',
+        'shippingForm.city' => 'shipping city ',
+        'shippingForm.postcode' => 'shipping postal code',
+    ];
+
+    protected $messages = [
+        'accountForm.email.unique' => 'Seems you already have an account. Please sign in to place an order.',
+        'shippingForm.address.required' => 'Your :attribute is required'
+    ];
+
+    public function checkout()
+    {
+        $this->validate();
+
+        //when user is signed in associate the address to the user
+        ($this->shippingAddress = ShippingAddress::whereBelongsTo(auth()->user())->firstOrCreate($this->shippingForm))
+            ?->user()
+            ->associate(auth()->user())
+            ->save();
+    }
+
+    public function rules()
+    {
+        return [
+            'accountForm.email' => 'required|email|max:255|unique:users,email'.(auth()->user() ? ',' . auth()->user()->id : ''),
+            'shippingForm.address' => 'required|max:255',
+            'shippingForm.city' => 'required|max:255',
+            'shippingForm.postcode' => 'required|max:255',
+            'shippingTypeId' => 'required|exists:shipping_types,id'
+        ];
+    }
 
     public function mount()
     {
         $this->shippingTypes = ShippingType::orderBy('price', 'asc')->get();
 
         $this->shippingTypeId = $this->shippingTypes->first()->id;
+
+        if($user = auth()->user()){
+            $this->accountForm['email'] = $user->email;
+        }
+    }
+
+    public function updatedUserShippingAddressId($id)
+    {
+        if(!$id){
+            return;
+        }
+
+        $this->shippingForm = $this->userShippingAddresses->find($id)
+            ->only('address', 'city', 'postcode');
+    }
+
+    public function getUserShippingAddressesProperty()
+    {
+        return auth()->user()?->shippingAddresses;
     }
 
     public function getShippingTypeProperty()
