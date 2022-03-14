@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use App\Models\User;
+use App\Models\ShippingType;
+use App\Models\ShippingAddress;
+use App\Models\Variation;
 
 class Order extends Model
 {
@@ -30,5 +34,27 @@ class Order extends Model
             $order->placed_at = now();
             $order->uuid = (string) Str::uuid();
         } );
+    }
+
+    public function user()
+    {
+        return $this->belongsTo( User::class );
+    }
+
+    public function shippingType()
+    {
+        return $this->belongsTo( ShippingType::class );
+    }
+
+    public function shippingAddress()
+    {
+        return $this->belongsTo( ShippingAddress::class );
+    }
+
+    public function variations()
+    {
+        return $this->belongsToMany( Variation::class )
+            ->withPivot(['quantity'])
+            ->withTimestamps();
     }
 }

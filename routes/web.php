@@ -26,7 +26,7 @@ Route::get('/checkout', CheckoutIndexController::class);
 
 Route::get('/categories/{category:slug}', CategoryShowController::class);
 
-Route::get('categories/products/{product:slug}', ProductShowController::class);
+Route::get('/products/{product:slug}', ProductShowController::class)->name('product');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

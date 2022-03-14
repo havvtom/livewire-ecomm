@@ -45,7 +45,7 @@
 
         <div class="overflow-hidden sm:rounded-lg grid lg:grid-cols-3 md:grid-cols-2 gap-4">
             @foreach( $products as $product )
-                <a href="products/{{ $product->slug }}" class="p-6 bg-white border-b border-gray-200 space-y-4">
+                <a href="{{ route('product', ['product' => $product->slug]) }}" class="p-6 bg-white border-b border-gray-200 space-y-4">
                     <img src="{{ $product->getFirstMediaUrl() }}" class="w-full">
 
                     <div class="space-y-1">

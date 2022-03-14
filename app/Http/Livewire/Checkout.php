@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Cart\Contracts\CartInterface;
 use App\Models\ShippingType;
+use App\Models\Order;
 use App\Models\ShippingAddress;
 use App\Cart\Cart;
 
@@ -13,7 +14,7 @@ class Checkout extends Component
 
     public $shippingTypes;
 
-    public $shippingAddress;
+    protected $shippingAddress;
 
     public $shippingTypeId;
 
@@ -41,15 +42,54 @@ class Checkout extends Component
         'shippingForm.address.required' => 'Your :attribute is required'
     ];
 
-    public function checkout()
+    public function checkout( CartInterface $cart )
     {
         $this->validate();
 
         //when user is signed in associate the address to the user
-        ($this->shippingAddress = ShippingAddress::whereBelongsTo(auth()->user())->firstOrCreate($this->shippingForm))
+       
+        $this->shippingAddress = ShippingAddress::query();
+
+        //Check if there is an authenticated user
+        if( auth()->user() ){
+            $this->shippingAddress = $this->shippingAddress->whereBelongsTo(auth()->user());
+        }
+
+        ($this->shippingAddress = $this->shippingAddress->firstOrCreate($this->shippingForm))
             ?->user()
             ->associate(auth()->user())
             ->save();
+
+        $order = Order::make(array_merge($this->accountForm, [
+            'subtotal' => $cart->subtotal()
+        ]));
+        
+        $order->user()->associate( auth()->user() );
+
+        $order->shippingType()->associate( $this->shippingType );
+
+        $order->shippingAddress()->associate( $this->shippingAddress );
+
+        $order->save();
+
+        $order->variations()->attach(
+            $cart->contents()->mapWithKeys( function( $variation ){
+                return [
+                    $variation->id => [
+                                    'quantity' => $variation->pivot->quantity
+                                ]
+                ];
+            } )
+            ->toArray()
+        );
+
+        $cart->contents()->each(function($variation){
+            $variation->stocks()->create([
+                'amount' => 0 - $variation->pivot->quantity
+            ]);
+        });
+
+        $cart->removeAll();
     }
 
     public function rules()

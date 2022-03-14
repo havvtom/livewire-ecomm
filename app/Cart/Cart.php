@@ -112,6 +112,11 @@ class Cart implements CartInterface
 		});
 	}
 
+	public function removeAll()
+	{
+		$this->instance()->variations()->detach();
+	}
+
 	public function isEmpty()
 	{
 		return $this->contents()->count() == 0;
