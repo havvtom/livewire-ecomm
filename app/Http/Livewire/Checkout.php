@@ -89,7 +89,15 @@ class Checkout extends Component
             ]);
         });
 
+        //Remove cart products
         $cart->removeAll();
+
+        //check if user is signed in
+        if( !auth()->user() ){
+            return redirect()->route('orders.confirmation', $order);
+        }
+
+        return redirect()->route('orders');
     }
 
     public function rules()
