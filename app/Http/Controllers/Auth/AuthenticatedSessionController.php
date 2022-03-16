@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Cart\Contracts\CartInterface;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -26,11 +27,13 @@ class AuthenticatedSessionController extends Controller
      * @param  \App\Http\Requests\Auth\LoginRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(LoginRequest $request)
+    public function store(LoginRequest $request, CartInterface $cart)
     {
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        $cart->associate($request->user());
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }

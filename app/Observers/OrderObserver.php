@@ -3,6 +3,8 @@
 namespace App\Observers;
 use App\Models\Order;
 use App\Observers\OrderObserver;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderStatusUpdated;
 
 class OrderObserver
 {
@@ -20,7 +22,9 @@ class OrderObserver
             ->filter( fn ($status) => filled($status) );
 
         if($originalOrder->status() != $order->status() && $filledStatuses->count() ){
-            dd('send email');
+
+            Mail::to($order->user)->send( new OrderStatusUpdated($order) );
+            
         }
                             
     }

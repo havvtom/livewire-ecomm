@@ -8,6 +8,8 @@ use App\Models\ShippingType;
 use App\Models\Order;
 use App\Models\ShippingAddress;
 use App\Cart\Cart;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderCreated;
 
 class Checkout extends Component
 {
@@ -91,6 +93,12 @@ class Checkout extends Component
 
         //Remove cart products
         $cart->removeAll();
+
+        //Send email
+        Mail::to($order->email)->send( new OrderCreated($order) );
+
+        //Delete cart session after checkout
+        $cart->destroy();
 
         //check if user is signed in
         if( !auth()->user() ){

@@ -19,7 +19,17 @@ class Cart implements CartInterface
 
 	public function exists()
 	{
-		return $this->session->has(config('cart.session.key'));
+		return $this->session->has(config('cart.session.key')) && $this->instance();
+	}
+
+	//associate user to cart if user is signed in
+	public function associate( User $user )
+	{
+		if($user){
+			$this->instance->user()->associate($user);
+		}
+
+		$this->instance->save();
 	}
 
 	public function create(?User $user = null)
@@ -33,6 +43,13 @@ class Cart implements CartInterface
 		$instance->save();
 
 		$this->session->put(config('cart.session.key'), $instance->uuid);
+	}
+
+	public function destroy()
+	{
+		$this->session->forget(config('cart.session.key'));
+
+		$this->instance()->delete();
 	}
 
 	public function add( Variation $variation, $quantity = 1 )
