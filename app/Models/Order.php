@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\ShippingType;
 use App\Models\ShippingAddress;
 use App\Models\Variation;
+use App\Models\Presenters\OrderPresenter;
 
 class Order extends Model
 {
@@ -79,5 +80,10 @@ class Order extends Model
         return $this->belongsToMany( Variation::class )
             ->withPivot(['quantity'])
             ->withTimestamps();
+    }
+
+    public function presenter()
+    {
+        return new OrderPresenter($this);
     }
 }

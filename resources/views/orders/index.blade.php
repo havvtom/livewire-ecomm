@@ -19,15 +19,7 @@
 
                         <div>
                             <span class="inline-flex items-center px-3 py-1 text-sm rounded-full font-semibold bg-gray-100 text-gray-800">
-                              @if( $order->status() == 'placed_at' )
-                                    {{__('Order Placed')}}
-                              @endif
-                              @if( $order->status() == 'packaged_at' )
-                                    {{__('Order Packaged')}}
-                              @endif
-                              @if( $order->status() == 'shipped_at' )
-                                    {{__('Order Shipped')}} {{ ($order->shipped_at->toDateTimeString()) }}
-                              @endif
+                                {{ $order->presenter()->status() }}
                             </span>
                         </div>
                     </div>
