@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductShowController;
 use App\Http\Controllers\CheckoutIndexController;
 use App\Http\Controllers\OrderConfirmationIndexController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +36,13 @@ Route::get('/orders', OrderIndexController::class)->name('orders');
 Route::get('/products/{product:slug}', ProductShowController::class)->name('product');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    //when authenticated user is admin
+    return view('/admin/dashboard');
 })->middleware(['auth'])->name('dashboard');
+
+Route::group(['prefix' => 'admin'], function(){
+    Route::get('products', [ProductController::class, 'index'])->name('admin.products');
+    
+});
 
 require __DIR__.'/auth.php';
