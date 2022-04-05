@@ -38,10 +38,11 @@ Route::get('/products/{product:slug}', ProductShowController::class)->name('prod
 Route::get('/dashboard', function () {
     //when authenticated user is admin
     return view('/admin/dashboard');
-})->middleware(['auth'])->name('dashboard');
+})->middleware(['auth'])->name('admin.dashboard');
 
 Route::group(['prefix' => 'admin'], function(){
     Route::get('products', [ProductController::class, 'index'])->name('admin.products');
+    Route::get('products/create', [ProductController::class, 'create'])->name('admin.create');
     
 });
 

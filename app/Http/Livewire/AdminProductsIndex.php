@@ -7,7 +7,7 @@ use App\Models\Product;
 
 class AdminProductsIndex extends Component
 {
-    public $searchQuery = '';
+    public $searchQuery;
 
     public function render()
     {
