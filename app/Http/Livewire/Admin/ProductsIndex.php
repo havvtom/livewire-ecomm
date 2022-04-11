@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\Admin;
 
 use Livewire\Component;
 use App\Models\Product;
 
-class AdminProductsIndex extends Component
+class ProductsIndex extends Component
 {
     public $searchQuery;
 
@@ -13,7 +13,7 @@ class AdminProductsIndex extends Component
     {
         $products = Product::search($this->searchQuery)->get();
 
-        return view('livewire.admin-products-index', [
+        return view('livewire.admin.products-index', [
             'products' => $products
         ]);
     }

@@ -1,3 +1,3 @@
 <x-dashboard>
-	<livewire:admin-products-index/>
+	@livewire('admin.products-index')
 </x-dashboard>
