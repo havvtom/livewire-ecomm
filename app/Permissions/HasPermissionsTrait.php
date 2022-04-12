@@ -9,7 +9,11 @@ trait HasPermissionsTrait
 {
 	public function givePermissionTo(...$permission)
 	{
-		dd(Arr::flatten($permission));
+		$permissions = $this->getAllPermissions(Arr::flatten($permission));
+		//check if one has permissions
+		if( $permissions == null ){
+			return $this;
+		} 
 	}
 
 	protected function getAllPermissions(array $permissions)
