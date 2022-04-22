@@ -10,10 +10,28 @@ trait HasPermissionsTrait
 	public function givePermissionTo(...$permission)
 	{
 		$permissions = $this->getAllPermissions(Arr::flatten($permission));
-		//check if one has permissions
+
+		// dd($permissions);
+
+		//check if permissions is not null so that we can save to the database
+		//if there are no permissions an error is given whe we call saveMany
 		if( $permissions == null ){
 			return $this;
 		} 
+
+		//attach the permissions to the user by saveMany
+		$this->permissions()->saveMany($permissions);
+	}
+
+	public function withdrawPermissionTo(...$permission)
+	{
+		$permissions = $this->getAllPermissions(Arr::flatten($permission));
+
+		//no need to check if $permissions is not null 
+		//detach can work if we pass null
+		$this->permissions()->detach($permissions);
+
+		return $this;
 	}
 
 	protected function getAllPermissions(array $permissions)
@@ -59,6 +77,6 @@ trait HasPermissionsTrait
 
 	protected function hasPermission($permission)
 	{
-		return (bool) $this->permissions->where('name', $permission)->count();
+		return (bool) $this->permissions->where('name', $permission->name)->count();
 	}
 }

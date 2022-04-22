@@ -10,10 +10,11 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\ShippingAddress;
 use App\Models\Order;
 use App\Permissions\HasPermissionsTrait;
+use Laravel\Scout\Searchable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasPermissionsTrait;
+    use HasApiTokens, HasFactory, Notifiable, HasPermissionsTrait, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -53,5 +54,14 @@ class User extends Authenticatable
     public function orders()
     {
         return $this->hasMany( Order::class );
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email
+        ];
     }
 }

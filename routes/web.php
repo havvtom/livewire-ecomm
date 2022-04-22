@@ -9,6 +9,7 @@ use App\Http\Controllers\CheckoutIndexController;
 use App\Http\Controllers\OrderConfirmationIndexController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,9 +42,12 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('admin.dashboard');
 
 Route::group(['prefix' => 'admin'], function(){
+    //products
     Route::get('products', [ProductController::class, 'index'])->name('admin.products');
     Route::get('products/create', [ProductController::class, 'create'])->name('admin.create');
-    
+    //users
+    Route::get('users', [UserController::class, 'index'])->name('admin.users');
+    Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
 });
 
 require __DIR__.'/auth.php';

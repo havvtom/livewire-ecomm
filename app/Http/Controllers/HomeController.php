@@ -9,7 +9,6 @@ class HomeController extends Controller
 {
     public function __invoke()
     {
-        auth()->user()?->givePermissionTo(['edit product', 'create product']);
         $categories = Category::tree()->get()->toTree();
 
         return view('home', [
