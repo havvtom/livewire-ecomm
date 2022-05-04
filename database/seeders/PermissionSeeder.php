@@ -39,6 +39,10 @@ class PermissionSeeder extends Seeder
                 'id' => 6,
                 'name' => 'give permissions'
             ],
+            [
+                'id' => 7,
+                'name' => 'view admin'
+            ],
         ]);
     }
 }

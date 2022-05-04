@@ -23,9 +23,11 @@
                     Phone Number
                 </th>
                 <!-- if authenticated user can edit user to give permissions or give a role -->
+               
                 <th scope="col" class="px-6 py-3">
                     <span class="sr-only">Edit</span>
                 </th>
+                
             </tr>
         </thead>
         <tbody>
@@ -45,9 +47,11 @@
                 <td class="px-6 py-4">
                     {{$user->phone_number}}
                 </td>
+                @can('give permissions')
                 <td class="px-6 py-4 text-right">
                     <button class="font-medium text-blue-600 dark:text-blue-500 hover:underline" wire:click="$emit('editUser', {{$user}})">Edit</button>
                 </td>
+                @endcan
             </tr>
             @endforeach
         </tbody>

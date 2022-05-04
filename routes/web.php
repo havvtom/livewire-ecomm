@@ -36,12 +36,19 @@ Route::get('/orders', OrderIndexController::class)->name('orders');
 
 Route::get('/products/{product:slug}', ProductShowController::class)->name('product');
 
-Route::get('/dashboard', function () {
-    //when authenticated user is admin
-    return view('/admin/dashboard');
-})->middleware(['auth'])->name('admin.dashboard');
+// Route::get('/dashboard', function () {
+//     //when authenticated user can view admin dashboard
+//     //if user cannot view dashboard redirect to home
+//     return view('/admin/dashboard');
+// })->middleware(['auth'])->name('admin.dashboard');
 
-Route::group(['prefix' => 'admin'], function(){
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'viewAdmin:view admin']], function(){
+
+    //dashboard
+    Route::get('/dashboard', function () {
+        return view('/admin/dashboard');
+    })->name('admin.dashboard');
+
     //products
     Route::get('products', [ProductController::class, 'index'])->name('admin.products');
     Route::get('products/create', [ProductController::class, 'create'])->name('admin.create');

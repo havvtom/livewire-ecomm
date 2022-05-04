@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\Users;
 
 use Livewire\Component;
 use App\Models\Permission;
+use App\Models\Role;
 
 class UserEdit extends Component
 {

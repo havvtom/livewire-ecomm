@@ -14,7 +14,7 @@ trait HasPermissionsTrait
 		// dd($permissions);
 
 		//check if permissions is not null so that we can save to the database
-		//if there are no permissions an error is given whe we call saveMany
+		//if there are no permissions an error is given when we call saveMany
 		if( $permissions == null ){
 			return $this;
 		} 
