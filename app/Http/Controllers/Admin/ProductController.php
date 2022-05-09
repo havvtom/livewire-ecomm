@@ -16,4 +16,9 @@ class ProductController extends Controller
     {
         return view('admin.products.create');
     }
+
+    public function store()
+    {
+        //product fields are slug, price, title, description, live_at
+    }
 }

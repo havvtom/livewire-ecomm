@@ -1,8 +1,9 @@
 <p class="text-2xl font-extrabold dark:text-white">Add Product</p>
-    <div class="grid grid-cols-2 gap-4 mt-8">
+<form method="POST" action="">
+    <div class="grid md:grid-cols-2 gap-4 mt-8">
         
         <div class="">
-            <form>
+            
               <div class="mb-6">
                 <label for="product" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Product Name</label>
                 <input type="text" id="product" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nike Airforce" required>
@@ -10,6 +11,10 @@
               <div class="mb-6">
                 <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Product Description</label>
                 <textarea id="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Describe product..."></textarea>
+              </div>
+              <div class="mb-6">
+                <label for="product" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Price</label>
+                <input type="number" id="product" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
               </div>
               <div class="mb-6">
                   <label class="block mb-2 text-gray-600" for="Multiselect">Categories</label>
@@ -23,7 +28,7 @@
                     </select>
                   </div>
                 </div>            
-            </form>
+            
         </div>
         <div class="">
             <label class="inline-block mb-2 text-gray-500">Upload
@@ -45,4 +50,7 @@
                 </label>
             </div>
         </div>
+        
     </div>
+    <x-button class="text-center" type="submit">Add Product</x-button>
+</form>

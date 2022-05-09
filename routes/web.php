@@ -45,13 +45,14 @@ Route::get('/products/{product:slug}', ProductShowController::class)->name('prod
 Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'viewAdmin:view admin']], function(){
 
     //dashboard
+    // code should be changed -- create a controller for this route
     Route::get('/dashboard', function () {
         return view('/admin/dashboard');
     })->name('admin.dashboard');
 
     //products
     Route::get('products', [ProductController::class, 'index'])->name('admin.products');
-    Route::get('products/create', [ProductController::class, 'create'])->name('admin.create');
+    Route::get('products/create', [ProductController::class, 'create'])->name('admin.products.create');
     //users
     Route::get('users', [UserController::class, 'index'])->name('admin.users');
     Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
