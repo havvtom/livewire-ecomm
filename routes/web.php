@@ -53,6 +53,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'viewAdmin:view admi
     //products
     Route::get('products', [ProductController::class, 'index'])->name('admin.products');
     Route::get('products/create', [ProductController::class, 'create'])->name('admin.products.create');
+
     //users
     Route::get('users', [UserController::class, 'index'])->name('admin.users');
     Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');

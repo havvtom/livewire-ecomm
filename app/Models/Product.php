@@ -22,6 +22,8 @@ class Product extends Model implements HasMedia
 
     use Searchable;
 
+    protected $guarded = [];
+
     public static function booted()
     {
         static::addGlobalScope( new LiveScope );

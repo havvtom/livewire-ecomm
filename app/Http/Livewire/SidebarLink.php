@@ -18,7 +18,7 @@ class SidebarLink extends Component
     public function show()
     {
         //title is the name of the route and should be name of the view(admin.$sidebar->title)
-        
+        // dd('admin.'.Str::lower($this->sidebar['title']));
         return redirect()->route('admin.'.Str::lower($this->sidebar['title']));
     }
 

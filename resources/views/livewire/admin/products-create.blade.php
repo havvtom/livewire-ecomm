@@ -1,36 +1,48 @@
-<p class="text-2xl font-extrabold dark:text-white">Add Product</p>
-<form method="POST" action="">
+<form wire:submit.prevent="addProduct" >
     <div class="grid md:grid-cols-2 gap-4 mt-8">
-        
-        <div class="">
-            
-              <div class="mb-6">
-                <label for="product" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Product Name</label>
-                <input type="text" id="product" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nike Airforce" required>
-              </div>
-              <div class="mb-6">
-                <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Product Description</label>
-                <textarea id="message" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Describe product..."></textarea>
-              </div>
-              <div class="mb-6">
-                <label for="product" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Price</label>
-                <input type="number" id="product" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
-              </div>
-              <div class="mb-6">
-                  <label class="block mb-2 text-gray-600" for="Multiselect">Categories</label>
-                  <div class="relative flex w-full">
-                    <select
-                      class="block w-full p-3 border border-gray-300 rounded-sm cursor-pointer focus:outline-none"
-                      multiple>
-                      @foreach($categories as $category)
-                      <option value="1">{{$category->title}}</option>
-                      @endforeach
-                    </select>
-                  </div>
-                </div>            
-            
+    <div>
+        <div class="mb-6">
+            <label for="product" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Product Name</label>
+            <input type="text" wire:model="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nike Airforce" required>
+            @error('title')
+                <div class="mt-2 font-semibold text-red-500">
+                    {{$message}}
+                </div>
+            @enderror
         </div>
-        <div class="">
+        <div class="mb-6">
+            <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Product Description</label>
+            <textarea id="message" wire:model="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Describe product..."></textarea>
+            @error('description')
+                <div class="mt-2 font-semibold text-red-500">
+                    {{$message}}
+                </div>
+            @enderror
+        </div>
+        <div class="mb-6">
+            <label for="product" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Price</label>
+            <input type="number" id="product" wire:model="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+            @error('price')
+                <div class="mt-2 font-semibold text-red-500">
+                    {{$message}}
+                </div>
+            @enderror
+        </div>
+        <div class="mb-6">
+          <label class="block mb-2 text-gray-600" for="Multiselect">Categories</label>
+          <div class="relative flex w-full">
+            <select
+              wire:model="addedCategories"
+              class="block w-full p-3 border border-gray-300 rounded-sm cursor-pointer focus:outline-none"
+              multiple>
+              @foreach($categories as $category)
+              <option value="{{$category->id}}">{{$category->title}}</option>
+              @endforeach
+            </select>
+          </div>
+        </div> 
+    </div>
+    <div class="">
             <label class="inline-block mb-2 text-gray-500">Upload
                 Image(jpg,png,svg,jpeg)</label>
             <div class="flex items-center justify-center w-full">
@@ -50,7 +62,6 @@
                 </label>
             </div>
         </div>
-        
     </div>
     <x-button class="text-center" type="submit">Add Product</x-button>
 </form>
